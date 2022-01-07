@@ -1,0 +1,16 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  labels:
+    app: http-server
+  name: http-server
+  namespace: default
+spec:
+  rules:
+  - host: example.127.0.0.1.nip.io
+    http:
+      paths:
+      - backend:
+          serviceName: http-server
+          servicePort: 80
+        pathType: ImplementationSpecific
