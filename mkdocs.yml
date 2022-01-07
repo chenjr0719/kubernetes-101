@@ -1,0 +1,8 @@
+site_name: Kubernetes 101
+theme:
+  name: material
+nav:
+  - Home: "index.md"
+  - Requirements: "requirements.md"
+  - Setup: "setup.md"
+  - Workloads: "workloads.md"
