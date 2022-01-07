@@ -1,0 +1,641 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.1.4">
+    
+    
+      
+        <title>Workloads - Kubernetes 101</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.bb3983ee.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.e6a45f82.min.css">
+        
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#deploy-workloads" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Kubernetes 101" class="md-header__button md-logo" aria-label="Kubernetes 101" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Kubernetes 101
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Workloads
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Kubernetes 101" class="md-nav__button md-logo" aria-label="Kubernetes 101" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    Kubernetes 101
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../requirements/" class="md-nav__link">
+        Requirements
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../setup/" class="md-nav__link">
+        Setup
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Workloads
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Workloads
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#pod" class="md-nav__link">
+    Pod
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deployment" class="md-nav__link">
+    Deployment
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#service" class="md-nav__link">
+    Service
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ingress" class="md-nav__link">
+    Ingress
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#wrap-up" class="md-nav__link">
+    Wrap Up
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#pod" class="md-nav__link">
+    Pod
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deployment" class="md-nav__link">
+    Deployment
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#service" class="md-nav__link">
+    Service
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ingress" class="md-nav__link">
+    Ingress
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#wrap-up" class="md-nav__link">
+    Wrap Up
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+
+<h1 id="deploy-workloads">Deploy Workloads</h1>
+<p>In the following examples, we will use a docker image which provided by <a href="https://www.katacoda.com/">Katacoda</a> to deploy an example HTTP server.</p>
+<h2 id="pod">Pod</h2>
+<p>The <strong>Pod</strong> is the minimum component to run containers on Kubernetes. And when you need to scale containers on K8s (ex: Scale HTTP API to 10 instances), usually the target is Pod. Each pod contains at least one container but it also supports multiple containers in a Pod. We call those additional containers as <strong>Sidecar</strong> containers.</p>
+<p>For example, you can run a container for your workload (ex: HTTP API, application) and write the logs to a local path in the container. Then, use the sidecar container to stream the logs from the local path to the log aggregator (ex: fluentd).</p>
+<p>To create a Pod, you can use the command like:</p>
+<pre><code class="language-shell"># Without -n/--namespace, this pod will run in the default namespace
+kubectl run -it ubuntu --image ubuntu:20.04
+# You can operate with bash now.
+# Let's exit the bash first, and use exec to enter pod again
+exit
+kubectl exec -it ubuntu -- bash
+</code></pre>
+<p>After you create the pod, you can also check the Rancher. You can found it under the deault project:
+<img alt="" src="../images/workloads/defualt_project.png" /></p>
+<p>And the pod can be found under <code>Workloads</code> tab:
+<img alt="" src="../images/workloads/pod.png" /></p>
+<p>Before we move to next step, please delete this pod with:</p>
+<pre><code class="language-shell">kubectl delete pod ubuntu
+</code></pre>
+<h2 id="deployment">Deployment</h2>
+<p>You can create a Pod to run your workload on Kubernetes. However, when you need to scale it, you might need to create dozen of Pods. It could be a very tedious process if you do it manually.</p>
+<p>So, there is another component <strong>Deployment</strong> to help you make this process more easily. The <strong>Deployment</strong>, which contains a template to create Pods (aka, Pod Template). And you can simply modify the number of replicas to scale your workload. But remember, it is suitable to run with a stateless workload (ex: RESTful API, if you implement with correct design). So, you can imagine that you have an HTTP API server. With Deployment, you can simply scale it to handle more incoming HTTP requests.</p>
+<p>To better manage the Deployment, we usually use <strong>YAML</strong> to manage the configuration. Let's create the YAML file first:</p>
+<pre><code class="language-shell">cat &lt;&lt; EOF &gt; deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: http-server
+  name: http-server
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: http-server
+  template:
+    metadata:
+      labels:
+        app: http-server
+    spec:
+      containers:
+      - image: katacoda/docker-http-server
+        imagePullPolicy: Always
+        name: http-server
+        ports:
+        - containerPort: 80
+EOF
+</code></pre>
+<p>And then apply it to the K8s:</p>
+<pre><code class="language-shell">kubectl apply -f deployment.yaml
+</code></pre>
+<p>You can check with the CLI:</p>
+<pre><code class="language-shell">kubectl get deployment
+</code></pre>
+<p>Or with Rancher, there is a Deployment has been created:
+<img alt="" src="../images/workloads/deployment.png" /></p>
+<p>And you can check the detail by click the link and see all the details like this:
+<img alt="" src="../images/workloads/deployment_detail.png" /></p>
+<p>There is only one pod in this deployment now. Let's try to scale it out and see what will happened on K8s. Click the <code>+</code> button and you can see there is a new pod has been created.
+<img alt="" src="../images/workloads/deployment_scale_out.png" /></p>
+<p>You can also check with <code>kubectl</code> to see there are two pods in the default namespace:</p>
+<pre><code class="language-shell">kubectl get pods
+</code></pre>
+<p>And you can apply the YAML again, it will make the number of pods to 1. Remember, the YAML file represents the desired state of your workload. It will change the state of K8s to fulfill your desired state.</p>
+<p>If you want to delete the deployment, you can:</p>
+<pre><code class="language-shell">kubectl delete deployment http-server
+# OR
+kubectl delete -f deployment.yaml
+</code></pre>
+<p>Now, you might have a question, if we can have multiple instances of API server, how can we load balancing it? So, let’s talk about <strong>Service</strong>.</p>
+<h2 id="service">Service</h2>
+<p>The <strong>Service</strong> is an abstract layer to help us forward the network traffic to a set of Pods (it could be Deployment). By default, it will forward the traffic to different Pods without any addtional configuration.</p>
+<p>Usually, we will combine Deployment with Service, after scaling your workload by changing the number of replicas, you don’t have to worry about the load balance since the Kubernetes already provide Service to resolve this problem.</p>
+<p>The K8s Service provides three different types to publish the service:</p>
+<ol>
+<li>
+<p>ClusterIP: Only provide internal IP in the cluster.</p>
+</li>
+<li>
+<p>NodePort: Based on ClusterIP but Kubernetes will also expose the NodePort. The traffic to node external IP plus the NodePort will be forwarded to your workload if you use the NodePort type.</p>
+</li>
+<li>
+<p>Load Balancer: Based on NodePort but plus the cloud provider’s support to allocate like AWS ELB to serving your workload.</p>
+</li>
+</ol>
+<p>Now, let's create a service:</p>
+<pre><code class="language-shell">cat &lt;&lt; EOF &gt; service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: http-server
+  name: http-server
+  namespace: default
+spec:
+  clusterIP:
+  ports:
+  - name: default
+    port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: http-server
+  type: ClusterIP
+EOF
+</code></pre>
+<p>And apply it:</p>
+<pre><code class="language-shell">kubectl apply -f service.yaml
+</code></pre>
+<p>And you can see there is a new service has been created on K8s. You can check it with Rancher in the <code>Service Discovery</code> tab:
+<img alt="" src="../images/workloads/service.png" /></p>
+<p>Or the CLI:</p>
+<pre><code class="language-shell">kubectl get services
+</code></pre>
+<p>Since we use the service type <code>ClusterIP</code> now so we cannot access from out of K8s. Let's apply some change on it:</p>
+<pre><code class="language-shell">CLUSTER_IP=$(kubectl get service http-server -o jsonpath='{.spec.clusterIP}')
+cat &lt;&lt; EOF &gt; service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: http-server
+  name: http-server
+  namespace: default
+spec:
+  clusterIP: $CLUSTER_IP
+  ports:
+  - name: default
+    port: 80
+    protocol: TCP
+    targetPort: 80
+    nodePort: 32000
+  selector:
+    app: http-server
+  type: NodePort
+EOF
+</code></pre>
+<p>And apply it again, you can see the Rancher shows the port has been allocated with this service:
+<img alt="" src="../images/workloads/service_nodeport.png" /></p>
+<p>You can also found it on the <code>Workload</code> tab:
+<img alt="" src="../images/workloads/deployment_nodeport.png" /></p>
+<p>Now, let's access the HTTP service with this NodePort <a href="http://localhost:32000">http://localhost:32000</a>. You should get the response similar to this:
+<img alt="" src="../images/workloads/http_server_nodeport.png" /></p>
+<p>The response will display the pod name. So we can scale out the number of pods and you can see the K8s service will load balancing the traffic automatically.
+<img alt="" src="../images/workloads/deployment_pods.png" />
+<img alt="" src="../images/workloads/http_server_load_balancing.png" /></p>
+<p>As you can see, we have two pods and the service will load balancing the traffic to this two pods.</p>
+<h2 id="ingress">Ingress</h2>
+<p>In the above example, we can use the <strong>NodePort</strong> to access the HTTP server on the K8s. However, exposing your workload to the outside world is still difficult. Using NodePort needs to expose <code>30000 - 32767</code> ports and it could be a serious security issue. On the other hand, using the Load Balancer needs support from cloud provider/Infrastructure so it might not be an ideal solution. So, we have the <strong>Ingress</strong> to resolve our problem.</p>
+<p>The <strong>Ingress</strong>, is an abstract layer to help us manage reverse proxy. You can find different implementations for Ingress controllers like Nginx, Traefik, Kong, and other popular solutions. Using the ingress-nginx is a common and simple one. You can create ingress with subdomain and path. Then, the ingress controller will forward the traffic to your workload. You only need to create service with <code>type: ClusterIP</code> and don’t worry about other management issues. Furthermore, if you can have a wildcard FQDN, you can simply create multiple Ingresses to serve your micro-services without too much operation effort.</p>
+<p>Let's revert the configuration of service first:</p>
+<pre><code class="language-shell">CLUSTER_IP=$(kubectl get service http-server -o jsonpath='{.spec.clusterIP}')
+cat &lt;&lt; EOF &gt; service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: http-server
+  name: http-server
+  namespace: default
+spec:
+  clusterIP: $CLUSTER_IP
+  ports:
+  - name: default
+    port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: http-server
+  type: ClusterIP
+EOF
+</code></pre>
+<p>And apply it:</p>
+<pre><code class="language-shell">kubectl apply -f service.yaml
+</code></pre>
+<p>Now, let's create the ingress for this service:</p>
+<pre><code class="language-shell">cat &lt;&lt; EOF &gt;&gt; ingress.yaml
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  labels:
+    app: http-server
+  name: http-server
+  namespace: default
+spec:
+  rules:
+  - host: example.127.0.0.1.nip.io
+    http:
+      paths:
+      - backend:
+          serviceName: http-server
+          servicePort: 80
+        pathType: ImplementationSpecific
+EOF
+</code></pre>
+<p>And apply it:</p>
+<pre><code class="language-shell">kubectl apply -f ingress.yaml
+</code></pre>
+<p>You can check with CLI:</p>
+<pre><code class="language-shell">kubectl get ingress
+</code></pre>
+<p>Or using the Rancher, navigate to <code>Load Balancing</code> tab, you can see your ingress like this:
+<img alt="" src="../images/workloads/ingress.png" /></p>
+<p>Now, you can access the URL <a href="http://example.127.0.0.1.nip.io">http://example.127.0.0.1.nip.io</a> to access the deployment with ingress and it should looks like:
+<img alt="" src="../images/workloads/http_server_ingress.png" /></p>
+<h2 id="wrap-up">Wrap Up</h2>
+<p>In this example, you can learn how to deploy a HTTP server and expose it for external access. Besides, with the K8s deployment, you can also scale the HTTP server to multiple instances which can handle large workloads with minimum operation efforts. There still a lot of topics to optimize the configuration to make it production ready. We might have more example in the future.</p>
+
+              
+            </article>
+          </div>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    <nav class="md-footer__inner md-grid" aria-label="Footer">
+      
+        
+        <a href="../setup/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Setup" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              Setup
+            </div>
+          </div>
+        </a>
+      
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "..", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../assets/javascripts/workers/search.361d90f1.min.js"}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.289a2a4b.min.js"></script>
+      
+    
+  </body>
+</html>
